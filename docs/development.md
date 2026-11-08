@@ -51,8 +51,8 @@ It writes the source commit and executable/interface hashes into
    `package.json`, `package-lock.json`, the encoder version and
    `docs/releases/vVERSION.md` together.
 2. Merge a signed commit after CI passes, then push a signed `vVERSION` tag.
-3. The Release workflow reruns CI, builds on Ubuntu 24.04, packages with
-   GoReleaser, verifies the extracted archive and uploads a **draft** GitHub
+3. The Release workflow reruns CI on Ubuntu 24.04, packages that verified CI
+   artifact with GoReleaser, verifies the extracted archive and uploads a **draft** GitHub
    release. The archive includes the Node runtime and Rust encoder; GoReleaser
    packages them and does not build a Go service.
 4. Download the draft assets on a fresh Ubuntu host, verify checksums, key
