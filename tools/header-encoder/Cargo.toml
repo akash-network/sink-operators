@@ -13,7 +13,7 @@ hex = "0.4"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sha2 = "0.10"
-ed25519-dalek = "2"
+ed25519-dalek = "3"
 ibc-client-tendermint = "0.57"
 ibc-core-client-types = "0.57"
 tendermint = "0.40"
