@@ -25,9 +25,9 @@ Run each reporter under a separate operator with
 independent Akash and replaying Solana nodes. The Solana node must retain finalized
 transactions for the challenge period plus the longest expected outage.
 
-Obtain the release tag, deployed AKT program and mint addresses, and RPC endpoints
-from the bridge deployment handoff. The package's compiled IDL must match that
-program. A release built with development IDs cannot run against mainnet.
+v0.1.0 supports isolated test networks. Obtain their Akash chain ID, Solana genesis
+hash, deployed AKT program/mint addresses and RPC endpoints from the deployment
+handoff. `--network testnet` rejects both Akash and Solana mainnet identities. The package's compiled IDL must match that program. A release built with development IDs cannot run against mainnet.
 
 The relayer needs SOL and header-update permission. The reporter needs AKT for
 fees and membership in the current Akash reporter policy. Use dedicated service
@@ -98,10 +98,10 @@ file contains a secp256k1 private key. Neither belongs in a release or Git.
 
 Edit `/etc/akt-ROLE/config.json`:
 
-| Both roles                                                                                                                 | Role-specific settings                                                                                                         |
-| -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Set `akashRpc`, `solanaRpc` and the deployed `programId`. Keep `akashChainId=akashnet-2` and the supplied mainnet genesis. | Reporter: set `reporter` to the generated address, `mint` to the verified mint, and keep `keyFile` pointing to `reporter.key`. |
-| Preserve the reviewed freshness and fee limits.                                                                            | Relayer: keep `payerKeyFile`, `headerEncoder` and persistent `stateDir` paths from the example.                                |
+| Both roles                                                                                                            | Role-specific settings                                                                                                         |
+| --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Set `akashRpc`, `solanaRpc` and the deployed `programId`. Set the actual test `akashChainId` and `solanaGenesisHash`. | Reporter: set `reporter` to the generated address, `mint` to the verified mint, and keep `keyFile` pointing to `reporter.key`. |
+| Preserve the reviewed freshness and fee limits.                                                                       | Relayer: keep `payerKeyFile`, `headerEncoder` and persistent `stateDir` paths from the example.                                |
 
 Fund the public address with AKT (reporter) or SOL (relayer). Send the reporter's
 public address to the governance coordinator for admission. For a closed relayer
@@ -110,7 +110,7 @@ set, the bridge administrator grants the relayer address header-update permissio
 Check the local configuration without RPC requests, key loading or transactions:
 
 ```bash
-runuser -u "$ACCOUNT" -- "$ROOT/bin/akt-$ROLE" check --config /etc/$ACCOUNT/config.json
+runuser -u "$ACCOUNT" -- "$ROOT/bin/akt-$ROLE" check --network testnet --config /etc/$ACCOUNT/config.json
 ```
 
 `keys address --key-file /absolute/path` checks file custody and prints its
@@ -139,7 +139,7 @@ install -d -m 0755 /etc/systemd/system/akt-reporter.service.d
 cat > /etc/systemd/system/akt-reporter.service.d/broadcast.conf <<'EOF'
 [Service]
 ExecStart=
-ExecStart=/opt/akt-bridge/current/bin/akt-reporter run --config /etc/akt-reporter/config.json --watch --broadcast
+ExecStart=/opt/akt-bridge/current/bin/akt-reporter run --network testnet --config /etc/akt-reporter/config.json --watch --broadcast
 EOF
 systemctl daemon-reload
 systemctl restart akt-reporter

@@ -29,7 +29,7 @@ reset only that transfer's budget:
 
 ```bash
 systemctl stop akt-relayer
-runuser -u akt-relayer -- /opt/akt-bridge/current/bin/akt-relayer run \
+runuser -u akt-relayer -- /opt/akt-bridge/current/bin/akt-relayer run --network testnet \
   --config /etc/akt-relayer/config.json \
   --reset-budget 'AKASH_OWNER/HEIGHT/SEQUENCE'
 systemctl start akt-relayer

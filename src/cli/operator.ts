@@ -15,6 +15,7 @@ async function main() {
     options: {
       help: { type: "boolean" },
       version: { type: "boolean" },
+      network: { type: "string", default: "mainnet" },
       config: { type: "string" },
       out: { type: "string" },
       "key-file": { type: "string" },
@@ -23,6 +24,7 @@ async function main() {
       "reset-budget": { type: "string" },
     },
   });
+  const network = z.enum(["mainnet", "testnet"]).parse(values.network);
   if (values.help || args.length === 0) {
     process.stdout.write(
       `akt-${role} run --config /absolute/config.json [--watch]${role === "reporter" ? " [--broadcast]" : ""}\n` +
@@ -32,7 +34,8 @@ async function main() {
         (role === "relayer"
           ? `akt-relayer run --config /absolute/config.json --reset-budget OWNER/HEIGHT/SEQUENCE|all\n`
           : "") +
-        `akt-${role} --version\n`,
+        `akt-${role} --version\n` +
+        `run/check: --network testnet opts into isolated test networks (default: mainnet).\n`,
     );
     return;
   }
@@ -93,6 +96,7 @@ async function main() {
     service,
     JSON.parse(await readFile(values.config, "utf8")),
     values.config,
+    network,
   );
   assert.ok(
     !values["reset-budget"] ||

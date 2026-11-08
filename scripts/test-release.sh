@@ -36,9 +36,19 @@ if (role === 'reporter') {
 }
 writeFileSync(`${fixture}/${role}.json`, JSON.stringify(config));
 writeFileSync(`${fixture}/${role}-wrong-chain.json`, JSON.stringify({ ...config, akashChainId: 'wrong-chain' }));
+writeFileSync(`${fixture}/${role}-testnet.json`, JSON.stringify({
+  ...config,
+  akashChainId: 'akash-bridge-v2-release-test-1',
+  solanaGenesisHash: program,
+  programId: JSON.parse(readFileSync(`${root}/interfaces/akt.json`, 'utf8')).address,
+}));
 JS
   # Config checks must not load keys, including the deliberately insecure file.
   "$command" check --config "$fixture/$role.json" > /dev/null
+  "$command" check --network testnet --config "$fixture/$role-testnet.json" > /dev/null
+  if "$command" check --network testnet --config "$fixture/$role.json" > /dev/null 2>&1; then
+    echo 'mainnet configuration unexpectedly accepted in testnet mode' >&2; exit 1
+  fi
   if [[ "$role" == reporter ]]; then
     "$command" check --config "$fixture/$role.json" --broadcast > /dev/null
   fi

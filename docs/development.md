@@ -58,11 +58,12 @@ It writes the source commit and executable/interface hashes into
 4. Download the draft assets on a fresh Ubuntu host, verify checksums, key
    custody, configuration, systemd units and the agreed network canary. Publish
    the draft only after recording the actual verification and support scope.
+   v0.1.0 is marked preproduction; production qualification is separate.
 
 ```bash
 git tag -s vVERSION -m 'vVERSION'
 git push origin vVERSION
-gh release edit vVERSION --draft=false --latest
+gh release edit vVERSION --draft=false --prerelease
 ```
 
 Releases never rebuild or publish the Akash node or Solana programs. Keep service

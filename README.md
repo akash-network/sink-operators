@@ -21,6 +21,7 @@ the header encoder, configuration examples and systemd units.
 Supported operator host: **Ubuntu 24.04, x86-64**. Releases are versioned
 independently of the Akash node and Solana programs.
 
-The checked-in AKT interface currently names the development program. A mainnet
-release requires the approved deployment interface and matching program/mint
-addresses. The services retain their network and interface checks.
+**v0.1.0 is a preproduction release for isolated test networks.** Use the
+checked-in AKT program interface and explicit `--network testnet`; both mainnet
+chain identities are rejected in this mode. The included systemd units select
+it. Mainnet use will require a later release with the approved production IDL.

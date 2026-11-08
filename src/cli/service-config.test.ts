@@ -29,6 +29,40 @@ const reporter = {
   gasLimit: "500000",
 };
 
+test("explicit testnet mode requires both chains to be non-mainnet", () => {
+  const config = {
+    ...relayer,
+    akashChainId: "akash-bridge-v2-testnetify-1",
+    solanaGenesisHash: web3.Keypair.generate().publicKey.toBase58(),
+    programId: "FfFAPUKqjf68ggj1HvpyzMHFDRnT2cFAdZYYQb7mK9i5",
+  };
+  checkServiceConfig("relayer", config, file, "testnet");
+  assert.throws(
+    () => checkServiceConfig("relayer", config, file),
+    /akashnet-2/,
+  );
+  assert.throws(
+    () =>
+      checkServiceConfig(
+        "relayer",
+        { ...config, akashChainId: "akashnet-2" },
+        file,
+        "testnet",
+      ),
+    /refuses Akash mainnet/,
+  );
+  assert.throws(
+    () =>
+      checkServiceConfig(
+        "relayer",
+        { ...config, solanaGenesisHash: MAINNET_GENESIS },
+        file,
+        "testnet",
+      ),
+    /refuses Solana mainnet/,
+  );
+});
+
 test("production services require explicit network, program and durable paths", () => {
   checkServiceConfig("relayer", relayer, file);
   assert.throws(
