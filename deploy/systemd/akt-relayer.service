@@ -1,0 +1,29 @@
+[Unit]
+Description=Akash Sink Solana relayer
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=akt-relayer
+Group=akt-relayer
+WorkingDirectory=/opt/akt-bridge/current
+ExecStart=/opt/akt-bridge/current/bin/akt-relayer run --config /etc/akt-relayer/config.json --watch
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=120
+UMask=0077
+StateDirectory=akt-relayer
+StateDirectoryMode=0700
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/akt-relayer
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target

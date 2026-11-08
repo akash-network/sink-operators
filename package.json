@@ -1,0 +1,44 @@
+{
+  "name": "@akashnetwork/sink-operators",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Akash Sink relayer and reporter services",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "prepare:sdk": "bash scripts/prepare-sdk.sh",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test src/shared/*.test.ts src/reporter/*.test.ts src/relayer/*.test.ts src/cli/*.test.ts",
+    "test:encoder": "CARGO_TARGET_DIR=.cache/cargo cargo test --locked --manifest-path tools/header-encoder/Cargo.toml",
+    "format": "prettier --write src interfaces config docs *.json README.md SECURITY.md && cargo fmt --manifest-path tools/header-encoder/Cargo.toml",
+    "format:check": "prettier --check src interfaces config docs *.json README.md SECURITY.md && cargo fmt --manifest-path tools/header-encoder/Cargo.toml --check",
+    "build": "bash scripts/build.sh"
+  },
+  "dependencies": {
+    "@akashnetwork/chain-sdk": "file:.cache/chain-sdk.tar",
+    "@bufbuild/protobuf": "2.11.0",
+    "@coral-xyz/anchor": "0.32.1",
+    "@cosmjs/encoding": "0.39.0",
+    "@cosmjs/proto-signing": "0.39.0",
+    "@cosmjs/stargate": "0.39.0",
+    "@cosmjs/tendermint-rpc": "0.39.0",
+    "@noble/curves": "1.9.7",
+    "@scure/base": "2.4.0",
+    "@solana/spl-token": "0.4.15",
+    "cosmjs-types": "0.11.0",
+    "long": "5.3.2",
+    "tsx": "4.23.15",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.1",
+    "prettier": "3.9.9",
+    "typescript": "5.9.3"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akash-network/sink-operators.git"
+  }
+}

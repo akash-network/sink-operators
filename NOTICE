@@ -1,0 +1,12 @@
+Akash Sink operators
+Copyright Akash Network contributors
+
+The relayer, reporter, shared proof handling, tests and header encoder originate
+from akash-network/node, contracts/solana, at commit
+5f39fad5647b70a2ab8352bf4b66a7d3978f1949, with operator packaging and software-key
+support added in this repository. They remain licensed under Apache-2.0.
+
+Generated interfaces originate from that node commit and akash-network/ibc-contracts
+commit 0da3165d8428a1b7792cc17551ecd1d3985761e6. The build uses Akash chain-sdk
+commit 3b977f0785eef4a5cfdd06747a8084f2cd5161ba. Dependency licenses remain in
+their packages; the bundled Node distribution includes its LICENSE.

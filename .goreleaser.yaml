@@ -1,0 +1,39 @@
+version: 2
+project_name: akt-bridge
+dist: ../release
+
+builds:
+  - skip: true
+
+archives:
+  - id: services
+    meta: true
+    formats: [tar.gz]
+    name_template: "akt-bridge_{{ .Version }}_linux_amd64"
+    files:
+      - "bin/**"
+      - "runtime/**"
+      - "node_modules/**"
+      - "src/**"
+      - "interfaces/**"
+      - "config/**"
+      - "deploy/**"
+      - "docs/**"
+      - package.json
+      - package-lock.json
+      - service-build-info.txt
+      - LICENSE
+      - NOTICE
+      - README.md
+      - SECURITY.md
+
+checksum:
+  name_template: "akt-bridge_{{ .Version }}_checksums.txt"
+  algorithm: sha256
+
+changelog:
+  disable: true
+
+release:
+  draft: true
+  mode: keep-existing
