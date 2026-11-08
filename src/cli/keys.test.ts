@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { chmod, readFile, rm, stat, symlink } from "node:fs/promises";
+import {
+  chmod,
+  readFile,
+  rm,
+  stat,
+  symlink,
+  writeFile,
+} from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
 import { makeSignBytes, makeSignDoc } from "@cosmjs/proto-signing";
@@ -69,4 +76,14 @@ test("keys cannot be overwritten, loaded through symlinks, or read with broad pe
     await chmod(path, 0o640);
     await assert.rejects(keyAddress(role, path), /owner-only regular file/);
   }
+});
+
+test("reporter key files reject seed phrases", async (t) => {
+  const directory = await temporaryDirectory("operator-key-format-");
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const path = join(directory, "reporter.key");
+  await writeFile(path, "example seed phrase is not a raw private key", {
+    mode: 0o600,
+  });
+  await assert.rejects(loadSigner(path), /32-byte lowercase hex secp256k1 key/);
 });
