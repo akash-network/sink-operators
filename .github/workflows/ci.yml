@@ -26,10 +26,17 @@ jobs:
         run: node scripts/audit.mjs
       - name: Build and test installable package
         run: bash scripts/build.sh "$PWD/.cache/package"
+      - name: Preserve package permissions
+        run: |
+          cd .cache
+          tar -czf operator-package.tar.gz -C package .
+          sha256sum operator-package.tar.gz > operator-package.sha256
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: linux-amd64-package
-          path: .cache/package
+          path: |
+            .cache/operator-package.tar.gz
+            .cache/operator-package.sha256
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

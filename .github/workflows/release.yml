@@ -33,8 +33,17 @@ jobs:
           [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
           test "$TAG" = "v$(node -p 'require("./package.json").version')"
           test "$(git rev-parse HEAD)" = "$(git rev-parse "refs/tags/$TAG^{commit}")"
-      - uses: ./.github/actions/setup
-      - run: bash scripts/build.sh "$PWD/.cache/package"
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: linux-amd64-package
+          path: .cache
+      - name: Use the verified package
+        run: |
+          cd .cache
+          sha256sum --check operator-package.sha256
+          mkdir package
+          tar -xzf operator-package.tar.gz -C package
+          test "$(awk '$1 == "commit" {print $2}' package/service-build-info.txt)" = "$(git rev-parse HEAD)"
       - uses: goreleaser/goreleaser-action@e435ccd777264be153ace6237001ef4d979d3a7a # v6
         with:
           distribution: goreleaser
