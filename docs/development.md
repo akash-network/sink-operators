@@ -29,8 +29,27 @@ do not claim a live mainnet mint or refund.
 
 `interfaces/` contains generated Anchor IDLs and types. Regenerate them in the
 pinned node/IBC contract repositories and copy the matching outputs together.
-Review the program address, schema and deployed program bytes before releasing.
-Never hand-edit the IDL address to bypass deployment checks.
+The IDL supplies the supported instruction, account and event layouts. Relayer
+and reporter clients bind that interface to the configured `programId`; changing
+a deployment address does not require regenerating the IDL. The reporter also
+checks that `mint` is the canonical mint for that program.
+
+Set RPC endpoints, `akashChainId`, `solanaGenesisHash`, `programId` and the
+reporter mint in each deployment's config. Live chain identity, account ownership,
+mint authority, freshness and finality checks remain enabled. Use a separate
+relayer state directory for each deployment. `--network` remains an explicit
+mainnet/testnet safety selection. A contract interface change still needs a
+compatible service release; configuration does not change account layouts.
+
+Starting with v0.1.1, reporter addresses are configurable. The v0.1.0 reporter
+requires its bundled program address. Reporter signing uses a 32-byte hex
+private-key file, never a seed phrase.
+
+A new release is needed for service fixes, dependency updates or changes to the
+supported instructions, account/event layouts, proof format or signing format.
+Changing endpoints, compatible deployment addresses, keys or supported limits
+only requires configuration and a service restart. A contract upgrade that
+preserves those interfaces does not by itself require an operator release.
 
 ## Build
 
@@ -58,7 +77,7 @@ It writes the source commit and executable/interface hashes into
 4. Download the draft assets on a fresh Ubuntu host, verify checksums, key
    custody, configuration, systemd units and the agreed network canary. Publish
    the draft only after recording the actual verification and support scope.
-   v0.1.0 is marked preproduction; production qualification is separate.
+   Preproduction releases do not establish production qualification.
 
 ```bash
 git tag -s vVERSION -m 'vVERSION'
