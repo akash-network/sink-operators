@@ -27,14 +27,14 @@ bash scripts/node-runtime.sh "$stage/package/runtime"
 install -m 755 .cache/cargo/release/akt-header-encoder "$stage/package/bin/"
 install -m 755 scripts/operator.sh "$stage/package/bin/akt-relayer"
 install -m 755 scripts/operator.sh "$stage/package/bin/akt-reporter"
-{
+(
   printf 'version %s\ncommit %s\nplatform linux_amd64\n' "$version" "$commit"
   node --version
   cargo --version
   sha256sum .cache/chain-sdk.tar
   cd "$stage/package"
   sha256sum bin/akt-header-encoder runtime/bin/node interfaces/*.json
-} > "$stage/package/service-build-info.txt"
+) > "$stage/package/service-build-info.txt"
 chmod -R a+rX,go-w "$stage/package"
 bash scripts/test-release.sh "$stage/package"
 mkdir -p "$(dirname "$1")"
